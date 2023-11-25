@@ -1,0 +1,4 @@
+{
+  "welcome": "Witaj w mojej aplikacji!",
+  "greeting": "Cześć, {{name}}!"
+}
