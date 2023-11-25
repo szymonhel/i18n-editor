@@ -6,7 +6,6 @@ import {FileContent} from "@/app/types/uploaded-file";
 
 
 const FileUploader = () => {
-    const [files, setFiles] = useState([]);
     async function uploadFiles(event: React.ChangeEvent<HTMLInputElement>) {
         const { files } = event.target;
 
@@ -15,7 +14,7 @@ const FileUploader = () => {
         }
 
         const result = await loadFiles(files) ?? [];
-        console.log(result[0].name, JSON.parse(result[0].content));
+        console.log(result[0].name, JSON.parse(result[0]?.content ?? '{}'));
     }
 
     async function loadFiles(files: FileList){
@@ -25,7 +24,7 @@ const FileUploader = () => {
 
                 return new Promise((resolve) => {
                     reader.onload = (e) => {
-                        resolve({name: file.name, content: e.target.result} as FileContent);
+                        resolve({name: file.name, content: e.target?.result} as FileContent);
                     };
 
                     reader.readAsText(file);
