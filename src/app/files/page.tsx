@@ -8,13 +8,13 @@ import {MoveLeft} from 'lucide-react';
 import CustomDialog from '@/app/_components/CustomDialog';
 import {DialogTrigger} from '@/components/ui/dialog';
 import KeyForm from '@/app/_components/KeyForm';
-import {FileContent} from '@/types/uploaded-file';
+import {FileContent, FileContentSerialized} from '@/types/uploaded-file';
 import {useRouter} from 'next/navigation';
 import {FILES_SESSION_KEY} from '@/consts';
 
 const Page = () => {
 
-
+    const [fileContent, setFileContent] = React.useState<FileContentSerialized[]>([]);
     const router = useRouter();
     const value = sessionStorage.getItem(FILES_SESSION_KEY);
 
@@ -26,8 +26,8 @@ const Page = () => {
         .map(z => ({...z, content: JSON.parse(z.content!)}));
 
     const uniqueKeys = Array.from(new Set(fileContentCollection.flatMap(z => Object.keys(z.content))));
-    const fileNames = fileContentCollection.map(z => z.content);
-
+    const fileNames = fileContentCollection.map(z => z.name);
+    const contents = fileContentCollection.map(z => z.content);
     return (
         <>
             <div className={'flex justify-between items-center'}>
@@ -40,7 +40,7 @@ const Page = () => {
 
                 <CustomDialog title={'New Key' } trigger={
                     <DialogTrigger ><Button variant={'default'}>Add new key</Button></DialogTrigger>
-                } content={<KeyForm/>}/>
+                } content={<KeyForm fileNames={fileNames} alreadyCreatedKeys={uniqueKeys}/>}/>
 
 
 

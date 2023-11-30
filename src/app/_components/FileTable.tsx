@@ -9,9 +9,8 @@ import {FileContent, FileContentSerialized} from '@/types/uploaded-file';
 export type FileTableProps = {
     fileContentCollection: FileContentSerialized[];
     uniqueKeys: string[];
-    fileNames: string[];
 }
-const FileTable = ({fileContentCollection, uniqueKeys, fileNames}: FileTableProps) => {
+const FileTable = ({fileContentCollection, uniqueKeys}: FileTableProps) => {
 
 
     return (
@@ -31,8 +30,8 @@ const FileTable = ({fileContentCollection, uniqueKeys, fileNames}: FileTableProp
                         <TableRow key={key}>
                             <TableCell>{index + 1}</TableCell>
                             <TableCell className="font-medium">{key}</TableCell>
-                            {fileNames.map((fileName: any, index: number) =>
-                                <TableCell key={index}>{fileName[key]}</TableCell>
+                            {fileContentCollection.map(({content}: any, index: number) =>
+                                <TableCell key={index}>{content[key]}</TableCell>
                             )}
                         </TableRow>)
                     }
