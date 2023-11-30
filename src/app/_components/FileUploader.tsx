@@ -2,10 +2,13 @@
 
 import React, {useState} from 'react';
 import {Upload} from "lucide-react";
-import {FileContent} from "@/app/types/uploaded-file";
+import {FileContent} from "@/types/uploaded-file";
+import {useRouter} from 'next/navigation';
+import {FILES_SESSION_KEY} from '@/consts';
 
 
 const FileUploader = () => {
+    const router = useRouter();
     async function uploadFiles(event: React.ChangeEvent<HTMLInputElement>) {
         const { files } = event.target;
 
@@ -14,7 +17,8 @@ const FileUploader = () => {
         }
 
         const result = await loadFiles(files) ?? [];
-        console.log(result[0].name, JSON.parse(result[0]?.content ?? '{}'));
+        sessionStorage.setItem(FILES_SESSION_KEY, JSON.stringify(result));
+        router.push('/files')
     }
 
     async function loadFiles(files: FileList){
