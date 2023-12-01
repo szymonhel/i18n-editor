@@ -1,6 +1,7 @@
 import React from 'react';
 import {
     Dialog,
+    DialogTrigger,
     DialogContent,
     DialogDescription,
     DialogHeader,
@@ -14,8 +15,8 @@ export type DialogProps = {
 }
 const CustomDialog = (props: DialogProps) => {
     return (
-        <Dialog>
-            {props.trigger}
+        <Dialog >
+            <DialogTrigger asChild>{props.trigger}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>{props.title}</DialogTitle>

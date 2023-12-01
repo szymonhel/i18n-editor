@@ -1,9 +1,7 @@
 'use client';
 
-import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
 import React from 'react';
-import {useRouter} from 'next/navigation';
-import {FILES_SESSION_KEY} from '@/consts';
 import {FileContent, FileContentSerialized} from '@/types/uploaded-file';
 
 export type FileTableProps = {

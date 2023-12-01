@@ -6,23 +6,22 @@ import React from 'react';
 import {useForm} from 'react-hook-form';
 import { z } from 'zod';
 import {Textarea} from '@/components/ui/textarea';
+import TextInput from '@/components/ui/custom/TextInput';
+import {FileContentSerialized} from '@/types/uploaded-file';
 
 export type KeyFormProps = {
     fileNames: string[];
     alreadyCreatedKeys: string[];
+    onSubmit: ( model: FileContentSerialized) => void;
 }
 
-
-
-
-const KeyForm = ({alreadyCreatedKeys, fileNames}: KeyFormProps) => {
-
+const KeyForm = ({alreadyCreatedKeys, fileNames, onSubmit}: KeyFormProps) => {
+console.log(alreadyCreatedKeys);
     const keyFormSchema = z.object({
-        key: z.string().min(1),
-        definitions: z.record(z.string()).refine((value) => {
-            const keys = Object.keys(value);
-            return keys.every(key => !alreadyCreatedKeys.includes(key));
-        })
+        key: z.string().min(1).refine((value) => !alreadyCreatedKeys.map(z => z.toLowerCase()).includes(value.toLowerCase()), {
+            message: 'Key already exists'
+        }),
+        definitions: z.record(z.string().optional())
     });
 
     const form
@@ -31,27 +30,15 @@ const KeyForm = ({alreadyCreatedKeys, fileNames}: KeyFormProps) => {
     });
 
     function submit(values: z.infer<typeof keyFormSchema>) {
-        console.log(keyFormSchema.parse(values));
-
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
+        onSubmit({
+            name: values.key,
+            content: values.definitions as Record<string, string>
+        });
     }
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(submit)} className="space-y-8">
-                <FormField
-                    control={form.control}
-                    name="key"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Key</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Key" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                <TextInput key={'key'} control={form.control} name={'key'} placeholder={'Key'} label={'Key'}/>
 
                 {fileNames.map((fileName: any, index: number) =>
                         <FormField
