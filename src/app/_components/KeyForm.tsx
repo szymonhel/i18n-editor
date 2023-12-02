@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import {useForm} from 'react-hook-form';
@@ -9,14 +8,17 @@ import {Textarea} from '@/components/ui/textarea';
 import TextInput from '@/components/ui/custom/TextInput';
 import {FileContentSerialized} from '@/types/uploaded-file';
 
+export type CreatedKey = {
+    key: string;
+    definitions: Record<string, string>
+};
 export type KeyFormProps = {
     fileNames: string[];
     alreadyCreatedKeys: string[];
-    onSubmit: ( model: FileContentSerialized) => void;
+    onSubmit: ( model: CreatedKey) => void;
 }
 
 const KeyForm = ({alreadyCreatedKeys, fileNames, onSubmit}: KeyFormProps) => {
-console.log(alreadyCreatedKeys);
     const keyFormSchema = z.object({
         key: z.string().min(1).refine((value) => !alreadyCreatedKeys.map(z => z.toLowerCase()).includes(value.toLowerCase()), {
             message: 'Key already exists'
@@ -31,8 +33,8 @@ console.log(alreadyCreatedKeys);
 
     function submit(values: z.infer<typeof keyFormSchema>) {
         onSubmit({
-            name: values.key,
-            content: values.definitions as Record<string, string>
+            key: values.key,
+            definitions: values.definitions as Record<string, string>
         });
     }
     return (

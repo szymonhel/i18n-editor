@@ -6,7 +6,7 @@ import {Button} from '@/components/ui/button';
 import Link from 'next/link';
 import {MoveLeft} from 'lucide-react';
 import CustomDialog from '@/components/ui/custom/CustomDialog';
-import KeyForm from '@/app/_components/KeyForm';
+import KeyForm, {CreatedKey} from '@/app/_components/KeyForm';
 import {FileContent, FileContentSerialized} from '@/types/uploaded-file';
 import {useRouter} from 'next/navigation';
 import {FILES_SESSION_KEY} from '@/consts';
@@ -34,9 +34,10 @@ const Page = () => {
     const fileNames = filesContent.map(z => z.name);
     const contents = filesContent.map(z => z.content);
 
-    const addNewKey = (model: FileContentSerialized) => {
-        setFilesContent([...filesContent, model]);
-        setUniqueKeys([...uniqueKeys, model.name]);
+    const addNewKey = (model: CreatedKey ) => {
+        setFilesContent(filesContent => filesContent
+            .map(z => ({...z, content: {...z.content, [model.key]: model.definitions[z.name] }})));
+        setUniqueKeys([...uniqueKeys, model.key]);
     }
     return (
         <>
