@@ -37,7 +37,9 @@ const Page = () => {
     const addNewKey = (model: CreatedKey ) => {
         setFilesContent(filesContent => filesContent
             .map(z => ({...z, content: {...z.content, [model.key]: model.definitions[z.name] }})));
-        setUniqueKeys([...uniqueKeys, model.key]);
+        const set = new Set([...uniqueKeys, model.key]);
+
+        setUniqueKeys([...Array.from(set)]);
     }
 
     function onRemoveKey<V extends keyof Record<string, string>>(key: V) {
@@ -67,7 +69,7 @@ const Page = () => {
 
             </div>
 
-            <FileTable fileContentCollection={filesContent} uniqueKeys={uniqueKeys} removeKey={onRemoveKey}/>
+            <FileTable fileContentCollection={filesContent} editKey={addNewKey} uniqueKeys={uniqueKeys} removeKey={onRemoveKey}/>
         </>
 
     );

@@ -13,22 +13,32 @@ export type CreatedKey = {
     definitions: Record<string, string>
 };
 export type KeyFormProps = {
+    currentKey?: string;
+    fileContentCollection?: FileContentSerialized[];
     fileNames: string[];
     alreadyCreatedKeys: string[];
     onSubmit: ( model: CreatedKey) => void;
 }
 
-const KeyForm = ({alreadyCreatedKeys, fileNames, onSubmit}: KeyFormProps) => {
+const KeyForm = ({currentKey, fileContentCollection, alreadyCreatedKeys, fileNames, onSubmit}: KeyFormProps) => {
     const keyFormSchema = z.object({
-        key: z.string().min(1).refine((value) => !alreadyCreatedKeys.map(z => z.toLowerCase()).includes(value.toLowerCase()), {
+        key: z.string().min(1).refine((value) => !alreadyCreatedKeys.filter(z => z !== currentKey).map(z => z.toLowerCase()).includes(value.toLowerCase()), {
             message: 'Key already exists'
         }),
         definitions: z.record(z.string().optional())
     });
 
+
     const form
         = useForm<z.infer<typeof keyFormSchema>>({
-        resolver: zodResolver(keyFormSchema)
+        resolver: zodResolver(keyFormSchema),
+        defaultValues: {
+            key: currentKey,
+            definitions: fileContentCollection?.reduce((acc, curr) => {
+                acc[curr.name] = !!curr.content ? curr.content[currentKey!] : '';
+                return acc;
+            }, {} as Record<string, string>)
+        }
     });
 
     function submit(values: z.infer<typeof keyFormSchema>) {

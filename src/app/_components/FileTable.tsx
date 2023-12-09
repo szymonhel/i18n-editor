@@ -44,7 +44,7 @@ const FileTable = ({fileContentCollection, uniqueKeys, removeKey, editKey}: File
                                     <CustomDialog title={'New Key'} trigger={
                                         <Button variant={'outline'} size={'icon'} color={'warning'}><Pencil className="h-4 w-4" /></Button>
                                     }
-                                                  content={<KeyForm fileNames={fileContentCollection.map(z => z.name)} alreadyCreatedKeys={uniqueKeys}
+                                                  content={<KeyForm currentKey={key} fileContentCollection={fileContentCollection} fileNames={fileContentCollection.map(z => z.name)} alreadyCreatedKeys={uniqueKeys}
                                                                     onSubmit={editKey}/>}/>
                                 <CustomDialog trigger={
                                     <Button variant="outline" size="icon">
