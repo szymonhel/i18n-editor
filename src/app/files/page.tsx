@@ -4,7 +4,7 @@ import React, {useEffect} from 'react';
 import FileTable from '@/app/_components/FileTable';
 import {Button} from '@/components/ui/button';
 import Link from 'next/link';
-import {MoveLeft} from 'lucide-react';
+import {Download, MoveLeft} from 'lucide-react';
 import CustomDialog from '@/components/ui/custom/CustomDialog';
 import KeyForm, {CreatedKey} from '@/app/_components/KeyForm';
 import {FileContent, FileContentSerialized} from '@/types/uploaded-file';
@@ -60,13 +60,14 @@ const Page = () => {
                     <h4 className={'text-3xl font-bold'}>Uploaded files</h4>
                 </div>
 
-                <Button variant={'success'} className={'bg-green-500 hover:bg-green-700'} >Save</Button>
+                <div className={'flex gap-3'}>
+                <Button variant={'success'} className={'bg-green-500 hover:bg-green-700'} ><Download  className={'mr-2'}/> Download</Button>
                 <CustomDialog title={'New Key'} trigger={
                     <Button variant={'default'}>Add new key</Button>
                 }
                               content={<KeyForm fileNames={fileNames} alreadyCreatedKeys={uniqueKeys}
                                                 onSubmit={addNewKey}/>}/>
-
+                </div>
             </div>
 
             <FileTable fileContentCollection={filesContent} editKey={addNewKey} uniqueKeys={uniqueKeys} removeKey={onRemoveKey}/>
