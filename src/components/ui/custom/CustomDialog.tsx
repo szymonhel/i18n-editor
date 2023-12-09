@@ -14,12 +14,13 @@ export type DialogProps = {
     title: string;
     content: React.ReactNode;
     footer?: React.ReactNode;
+    fullScreen?: boolean;
 }
 const CustomDialog = (props: DialogProps) => {
     return (
         <Dialog >
             <DialogTrigger asChild>{props.trigger}</DialogTrigger>
-            <DialogContent>
+            <DialogContent className={props.fullScreen ?  'min-w-full h-screen overflow-auto': 'overflow-auto'}>
                 <DialogHeader>
                     <DialogTitle>{props.title}</DialogTitle>
                     <DialogDescription>{props.content}

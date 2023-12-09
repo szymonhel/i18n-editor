@@ -7,6 +7,7 @@ import {Button} from "@/components/ui/button";
 import {Pencil, Trash2} from "lucide-react";
 import CustomDialog from "@/components/ui/custom/CustomDialog";
 import KeyForm, {CreatedKey} from "@/app/_components/KeyForm";
+import FileTableRow from '@/app/_components/FileTableRow';
 
 export type FileTableProps = {
     fileContentCollection: FileContentSerialized[];
@@ -15,7 +16,6 @@ export type FileTableProps = {
     removeKey: (key: string) => void;
 }
 const FileTable = ({fileContentCollection, uniqueKeys, removeKey, editKey}: FileTableProps) => {
-
 
     return (
         <>
@@ -33,36 +33,8 @@ const FileTable = ({fileContentCollection, uniqueKeys, removeKey, editKey}: File
                 </TableHeader>
                 <TableBody>
                     {uniqueKeys.map((key: string, index: number) =>
-                        <TableRow key={key}>
-                            <TableCell>{index + 1}</TableCell>
-                            <TableCell className="font-medium">{key}</TableCell>
-                            {fileContentCollection.map(({content}: any, index: number) =>
-                                <TableCell key={index}>{content[key] ?? '-'} </TableCell>
-                            )}
-                            <TableCell>
-                                <div className={'w-100 flex justify-end gap-2'}>
-                                    <CustomDialog title={'New Key'} trigger={
-                                        <Button variant={'outline'} size={'icon'} color={'warning'}><Pencil className="h-4 w-4" /></Button>
-                                    }
-                                                  content={<KeyForm currentKey={key} fileContentCollection={fileContentCollection} fileNames={fileContentCollection.map(z => z.name)} alreadyCreatedKeys={uniqueKeys}
-                                                                    onSubmit={editKey}/>}/>
-                                <CustomDialog trigger={
-                                    <Button variant="outline" size="icon">
-                                        <Trash2 className="h-4 w-4" />
-                                    </Button>
-                                } title={'Confirmation'} content={'Do you want to remove this key?'} footer={
-                                    <>
-                                    <Button variant="outline" onClick={_ => {}}>
-                                        No
-                                    </Button>
-                                    <Button onClick={_ => removeKey(key)} color="danger">
-                                        Yes
-                                    </Button>
-                                    </>
-                                }/>
-                                </div>
-                            </TableCell>
-                        </TableRow>)
+                            <FileTableRow key={key} currentKey={key} contents={fileContentCollection.map(z => z.content![key])} index={index} fileContentCollection={fileContentCollection} editKey={editKey} removeKey={removeKey} uniqueKeys={uniqueKeys}>
+                            </FileTableRow>)
                     }
 
                 </TableBody>

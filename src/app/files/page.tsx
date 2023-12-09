@@ -10,11 +10,36 @@ import KeyForm, {CreatedKey} from '@/app/_components/KeyForm';
 import {FileContent, FileContentSerialized} from '@/types/uploaded-file';
 import {useRouter} from 'next/navigation';
 import {FILES_SESSION_KEY} from '@/consts';
+import { File } from 'lucide-react';
+import FilePreviewModal from '@/app/_components/FilePreviewModal';
 
 const Page = () => {
     const [filesContent, setFilesContent] = React.useState<FileContentSerialized[]>([]);
     const [uniqueKeys, setUniqueKeys] = React.useState<string[]>([]);
     const router = useRouter();
+
+    function flattenObject(obj, prefix = '') {
+        return Object.keys(obj).reduce((acc, key) => {
+            const newKey = prefix ? `${prefix}.${key}` : key;
+
+            if (typeof obj[key] === 'object' && obj[key] !== null) {
+                Object.assign(acc, flattenObject(obj[key], newKey));
+            } else {
+                acc[newKey] = obj[key];
+            }
+
+            return acc;
+        }, {});
+    }
+
+    useEffect(() => {
+        if (filesContent.length > 0) {
+            console.log('FILES CONTENT', JSON.stringify(filesContent));
+            console.log(sessionStorage.getItem(FILES_SESSION_KEY));
+            // sessionStorage.setItem(FILES_SESSION_KEY, JSON.stringify(filesContent));
+        }
+
+    }, [filesContent]);
 
     useEffect(() => {
         const value = sessionStorage.getItem(FILES_SESSION_KEY);
@@ -24,7 +49,7 @@ const Page = () => {
         }
 
         const fileContentCollection = (JSON.parse(value!) as FileContent[])
-            .map(z => ({name: z.name.split('.')[0], content: JSON.parse(z.content!)}));
+            .map(z => ({name: z.name.split('.')[0], content: flattenObject(JSON.parse(z.content!))}));
 
         setUniqueKeys(Array.from(new Set(fileContentCollection.flatMap(z => Object.keys(z.content)))));
 
@@ -33,9 +58,9 @@ const Page = () => {
 
     const fileNames = filesContent.map(z => z.name);
 
-    const addNewKey = (model: CreatedKey ) => {
+    const addNewKey = (model: CreatedKey) => {
         setFilesContent(filesContent => filesContent
-            .map(z => ({...z, content: {...z.content, [model.key]: model.definitions[z.name] }})));
+            .map(z => ({...z, content: {...z.content, [model.key]: model.definitions[z.name]}})));
         const set = new Set([...uniqueKeys, model.key]);
 
         setUniqueKeys([...Array.from(set)]);
@@ -44,7 +69,7 @@ const Page = () => {
     function onRemoveKey<V extends keyof Record<string, string>>(key: V) {
         setFilesContent(filesContent => filesContent
             .map(z => {
-                const  {[key]: placeholder, ...rest} = z.content;
+                const {[key]: placeholder, ...rest} = z.content;
                 return {...z, content: rest};
             }));
         setUniqueKeys(uniqueKeys.filter(z => z !== key));
@@ -61,16 +86,19 @@ const Page = () => {
                 </div>
 
                 <div className={'flex gap-3'}>
-                <Button variant={'success'} className={'bg-green-500 hover:bg-green-700'} ><Download  className={'mr-2'}/> Download</Button>
-                <CustomDialog title={'New Key'} trigger={
-                    <Button variant={'default'}>Add new key</Button>
-                }
-                              content={<KeyForm fileNames={fileNames} alreadyCreatedKeys={uniqueKeys}
-                                                onSubmit={addNewKey}/>}/>
+                    <CustomDialog fullScreen={true} trigger={<Button variant={'success'} className={'bg-green-500 hover:bg-green-700'}><File className={'mr-2'}/> File preview</Button>}
+                                  title={'Preview'} content={<FilePreviewModal filesContent={filesContent} uniqueKeys={uniqueKeys}/>}/>
+
+                    <CustomDialog title={'New Key'} trigger={
+                        <Button variant={'default'}>Add new key</Button>
+                    }
+                                  content={<KeyForm fileNames={fileNames} alreadyCreatedKeys={uniqueKeys}
+                                                    onSubmit={addNewKey}/>}/>
                 </div>
             </div>
 
-            <FileTable fileContentCollection={filesContent} editKey={addNewKey} uniqueKeys={uniqueKeys} removeKey={onRemoveKey}/>
+            <FileTable fileContentCollection={filesContent} editKey={addNewKey} uniqueKeys={uniqueKeys}
+                       removeKey={onRemoveKey}/>
         </>
 
     );

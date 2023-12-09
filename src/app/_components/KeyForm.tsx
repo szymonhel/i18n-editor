@@ -61,7 +61,7 @@ const KeyForm = ({currentKey, fileContentCollection, alreadyCreatedKeys, fileNam
                                 <FormItem>
                                     <FormLabel>{fileName}</FormLabel>
                                     <FormControl>
-                                        <Textarea placeholder='Translation' {...field} />
+                                        <Textarea {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
