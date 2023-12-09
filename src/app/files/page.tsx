@@ -32,7 +32,6 @@ const Page = () => {
     }, []);
 
     const fileNames = filesContent.map(z => z.name);
-    const contents = filesContent.map(z => z.content);
 
     const addNewKey = (model: CreatedKey ) => {
         setFilesContent(filesContent => filesContent
@@ -61,6 +60,7 @@ const Page = () => {
                     <h4 className={'text-3xl font-bold'}>Uploaded files</h4>
                 </div>
 
+                <Button variant={'success'} className={'bg-green-500 hover:bg-green-700'} >Save</Button>
                 <CustomDialog title={'New Key'} trigger={
                     <Button variant={'default'}>Add new key</Button>
                 }
