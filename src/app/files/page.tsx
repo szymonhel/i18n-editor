@@ -39,6 +39,16 @@ const Page = () => {
             .map(z => ({...z, content: {...z.content, [model.key]: model.definitions[z.name] }})));
         setUniqueKeys([...uniqueKeys, model.key]);
     }
+
+    function onRemoveKey<V extends keyof Record<string, string>>(key: V) {
+        setFilesContent(filesContent => filesContent
+            .map(z => {
+                const  {[key]: placeholder, ...rest} = z.content;
+                return {...z, content: rest};
+            }));
+        setUniqueKeys(uniqueKeys.filter(z => z !== key));
+    }
+
     return (
         <>
             <div className={'flex justify-between items-center'}>
@@ -57,7 +67,7 @@ const Page = () => {
 
             </div>
 
-            <FileTable fileContentCollection={filesContent} uniqueKeys={uniqueKeys}/>
+            <FileTable fileContentCollection={filesContent} uniqueKeys={uniqueKeys} removeKey={onRemoveKey}/>
         </>
 
     );

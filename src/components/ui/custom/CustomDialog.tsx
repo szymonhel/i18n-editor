@@ -5,13 +5,15 @@ import {
     DialogContent,
     DialogDescription,
     DialogHeader,
-    DialogTitle,
+    DialogTitle, DialogClose, DialogFooter,
 } from "@/components/ui/dialog"
+import {Button} from "@/components/ui/button";
 
 export type DialogProps = {
     trigger: React.ReactNode,
     title: string;
     content: React.ReactNode;
+    footer?: React.ReactNode;
 }
 const CustomDialog = (props: DialogProps) => {
     return (
@@ -23,6 +25,11 @@ const CustomDialog = (props: DialogProps) => {
                     <DialogDescription>{props.content}
                     </DialogDescription>
                 </DialogHeader>
+            { !!props.footer && <DialogFooter className="sm:justify-end">
+                <DialogClose asChild>
+                    {props.footer}
+                </DialogClose>
+            </DialogFooter> }
             </DialogContent>
         </Dialog>
     );
