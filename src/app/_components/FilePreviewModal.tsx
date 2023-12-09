@@ -8,12 +8,11 @@ export type FilePreviewModalProps = {
 }
 const FilePreviewModal: FC<FilePreviewModalProps> = ({filesContent, uniqueKeys}) => {
 
-    function unflattenObject(obj) {
+    function unflattenObject(obj: any) {
         const result = {};
-console.log('OBJ', obj);
         for (const key in obj) {
             const keys = key.split('.');
-            let current = result;
+            let current: any = result;
 
             for (let i = 0; i < keys.length; i++) {
                 const k = keys[i];
@@ -35,9 +34,9 @@ console.log('OBJ', obj);
 
     function allKeys() {
         return uniqueKeys.reduce((acc, item, index) => {
-            acc[item] = `test`;
+            acc[item] = ``;
             return acc;
-        }, {});
+        }, {} as Record<string, string>);
     }
 
     const copyVal = filesContent.map(z => ({...z, content: unflattenObject({...allKeys(), ...z.content})}));

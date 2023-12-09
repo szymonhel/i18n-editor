@@ -18,7 +18,7 @@ const Page = () => {
     const [uniqueKeys, setUniqueKeys] = React.useState<string[]>([]);
     const router = useRouter();
 
-    function flattenObject(obj, prefix = '') {
+    function flattenObject(obj: any, prefix = '') {
         return Object.keys(obj).reduce((acc, key) => {
             const newKey = prefix ? `${prefix}.${key}` : key;
 
@@ -29,7 +29,7 @@ const Page = () => {
             }
 
             return acc;
-        }, {});
+        }, {} as Record<string, string>);
     }
 
     useEffect(() => {
