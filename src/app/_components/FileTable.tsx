@@ -21,7 +21,7 @@ const FileTable = ({fileContentCollection, uniqueKeys, removeKey, editKey}: File
         <>
             <Table className={''}>
                 { !uniqueKeys.length  && <TableCaption>No keys</TableCaption>}
-                <TableHeader>
+                <TableHeader className={'sticky top-0 bg-white'}>
                     <TableRow>
                         <TableHead>#</TableHead>
                         <TableHead className="w-[100px]">Key</TableHead>

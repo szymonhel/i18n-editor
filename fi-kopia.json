@@ -1,0 +1,47 @@
+{
+  "common": {
+    "greetings": {
+      "hello": "Hello",
+      "goodMorning": "Good morning",
+      "goodAfternoon": "Good afternoon",
+      "goodEvening": "Good evening",
+      "goodNight": "Good night"
+    },
+    "farewells": {
+      "goodbye": "Goodbye",
+      "seeYouLater": "See you later",
+      "takeCare": "Take care",
+      "farewell": "Farewell"
+    }
+  },
+  "pages": {
+    "home": {
+      "welcome": "Welcome to our website",
+      "intro": "Explore the amazing features"
+    },
+    "aboutUs": {
+      "title": "About Us",
+      "content": "Learn more about our company and mission"
+    },
+    "contact": {
+      "title": "Contact Us",
+      "form": {
+        "name": "Name",
+        "email": "Email",
+        "message": "Message",
+        "submit": "Submit"
+      }
+    }
+  },
+  "errors": {
+    "notFound": "Page not found",
+    "serverError": "Internal server error",
+    "unauthorized": "Unauthorized access",
+    "forbidden": "Access forbidden"
+  },
+  "footer": {
+    "copyright": "© 2023 Your Company. All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service"
+  }
+}
