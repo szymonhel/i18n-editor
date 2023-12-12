@@ -29,7 +29,7 @@ const FileTableRow: FC<TableRowProps> = ({
             <TableCell>{index + 1}</TableCell>
             <TableCell className="font-medium">{currentKey}</TableCell>
             {contents.map((content: any, index: number) =>
-                <TableCell
+                <TableCell className={!content ? 'bg-red-300': ''}
                            key={index}> {content} </TableCell>
             )}
             <TableCell>
