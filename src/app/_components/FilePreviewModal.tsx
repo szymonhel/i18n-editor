@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import {FileContentSerialized} from '@/types/uploaded-file';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
+import {Button} from "@/components/ui/button";
 
 export type FilePreviewModalProps = {
     filesContent: any[];
@@ -41,8 +42,9 @@ const FilePreviewModal: FC<FilePreviewModalProps> = ({filesContent, uniqueKeys})
 
     const copyVal = filesContent.map(z => ({...z, content: unflattenObject({...allKeys(), ...z.content})}));
     return (
-        <Tabs defaultValue="account" className="w-[400px]">
-            <TabsList>
+        <>
+        <Tabs defaultValue="account" className=" w-[100%]">
+            <TabsList className={'sticky top-0 float-right w-100'}>
                 {
                     copyVal.map(({name}: FileContentSerialized) =>
                         <TabsTrigger key={name} value={name}>{name}</TabsTrigger>
@@ -56,9 +58,8 @@ const FilePreviewModal: FC<FilePreviewModalProps> = ({filesContent, uniqueKeys})
                     </TabsContent>
                 )
             }
-            <TabsContent value="account">Make changes to your account here.</TabsContent>
-            <TabsContent value="password">Change your password here.</TabsContent>
         </Tabs>
+        </>
     );
 };
 
