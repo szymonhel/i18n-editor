@@ -34,7 +34,7 @@ const FileTableRow: FC<TableRowProps> = ({
             )}
             <TableCell>
                 <div className={'w-100 flex justify-end gap-2'}>
-                    <CustomDialog title={'New Key'} trigger={
+                    <CustomDialog fullScreen={true} title={'New Key'} trigger={
                         <Button variant={'outline'} size={'icon'} color={'warning'}><Pencil
                             className="h-4 w-4"/></Button>
                     }

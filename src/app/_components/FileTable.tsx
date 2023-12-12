@@ -3,9 +3,6 @@
 import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
 import React from 'react';
 import {FileContent, FileContentSerialized} from '@/types/uploaded-file';
-import {Button} from "@/components/ui/button";
-import {Pencil, Trash2} from "lucide-react";
-import CustomDialog from "@/components/ui/custom/CustomDialog";
 import KeyForm, {CreatedKey} from "@/app/_components/KeyForm";
 import FileTableRow from '@/app/_components/FileTableRow';
 

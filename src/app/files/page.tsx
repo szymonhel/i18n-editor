@@ -89,7 +89,7 @@ const Page = () => {
                     <CustomDialog fullScreen={true} trigger={<Button variant={'success'} className={'bg-green-500 hover:bg-green-700'}><File className={'mr-2'}/> File preview</Button>}
                                   title={'Preview'} content={<FilePreviewModal filesContent={filesContent} uniqueKeys={uniqueKeys}/>}/>
 
-                    <CustomDialog title={'New Key'} trigger={
+                    <CustomDialog fullScreen={true} title={'New Key'} trigger={
                         <Button variant={'default'}>Add new key</Button>
                     }
                                   content={<KeyForm fileNames={fileNames} alreadyCreatedKeys={uniqueKeys}
