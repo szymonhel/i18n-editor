@@ -9,10 +9,11 @@ import FileTableRow from '@/app/_components/FileTableRow';
 export type FileTableProps = {
     fileContentCollection: FileContentSerialized[];
     uniqueKeys: string[];
+    filterKey?: string;
     editKey: (model: CreatedKey) => void;
     removeKey: (key: string) => void;
 }
-const FileTable = ({fileContentCollection, uniqueKeys, removeKey, editKey}: FileTableProps) => {
+const FileTable = ({fileContentCollection, filterKey, uniqueKeys, removeKey, editKey}: FileTableProps) => {
 
     return (
         <>
@@ -29,7 +30,7 @@ const FileTable = ({fileContentCollection, uniqueKeys, removeKey, editKey}: File
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {uniqueKeys.map((key: string, index: number) =>
+                    {uniqueKeys.filter(z => !filterKey || z.toLowerCase().includes(filterKey.toLowerCase())).map((key: string, index: number) =>
                             <FileTableRow key={key} currentKey={key} contents={fileContentCollection.map(z => z.content![key])} index={index} fileContentCollection={fileContentCollection} editKey={editKey} removeKey={removeKey} uniqueKeys={uniqueKeys}>
                             </FileTableRow>)
                     }

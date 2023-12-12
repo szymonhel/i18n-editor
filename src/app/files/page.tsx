@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import FileTable from '@/app/_components/FileTable';
 import {Button} from '@/components/ui/button';
 import Link from 'next/link';
@@ -12,12 +12,13 @@ import {useRouter} from 'next/navigation';
 import {FILES_SESSION_KEY} from '@/consts';
 import { File } from 'lucide-react';
 import FilePreviewModal from '@/app/_components/FilePreviewModal';
+import {Input} from "@/components/ui/input";
 
 const Page = () => {
     const [filesContent, setFilesContent] = React.useState<FileContentSerialized[]>([]);
     const [uniqueKeys, setUniqueKeys] = React.useState<string[]>([]);
     const router = useRouter();
-
+    const [filterKey, setFilterKey] = useState('');
     function flattenObject(obj: any, prefix = '') {
         return Object.keys(obj).reduce((acc, key) => {
             const newKey = prefix ? `${prefix}.${key}` : key;
@@ -97,7 +98,8 @@ const Page = () => {
                 </div>
             </div>
 
-            <FileTable fileContentCollection={filesContent} editKey={addNewKey} uniqueKeys={uniqueKeys}
+            <Input placeholder={'Filter by'} onChange={e => setFilterKey(e.target.value)} className={'w-[30%] mb-3'}/>
+            <FileTable fileContentCollection={filesContent} filterKey={filterKey} editKey={addNewKey} uniqueKeys={uniqueKeys}
                        removeKey={onRemoveKey}/>
         </>
 
