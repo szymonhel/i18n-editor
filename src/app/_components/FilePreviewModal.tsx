@@ -2,13 +2,14 @@ import React, {FC} from 'react';
 import {FileContentSerialized} from '@/types/uploaded-file';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
 import {Button} from "@/components/ui/button";
+import {useToast} from "@/components/ui/use-toast";
 
 export type FilePreviewModalProps = {
     filesContent: any[];
     uniqueKeys: string[];
 }
 const FilePreviewModal: FC<FilePreviewModalProps> = ({filesContent, uniqueKeys}) => {
-
+    const { toast } = useToast()
     function unflattenObject(obj: any) {
         const result = {};
         for (const key in obj) {
@@ -36,9 +37,6 @@ const FilePreviewModal: FC<FilePreviewModalProps> = ({filesContent, uniqueKeys})
     function convertNumericKeysToArray(obj: any) {
         for (const key in obj) {
             if (Object.prototype.hasOwnProperty.call(obj, key)) {
-                if(key === 'goodMorning') {
-                    //debugger;
-                }
                 if (typeof obj[key] === 'object' && !Object.keys(obj[key]).every(k => !isNaN(Number(k)))) {
                     obj[key] = convertNumericKeysToArray(obj[key]);
                 } else {
@@ -52,12 +50,34 @@ const FilePreviewModal: FC<FilePreviewModalProps> = ({filesContent, uniqueKeys})
         return obj;
     }
 
-    downloadFile(data: Response) {
-        const blob = new Blob([data], { type: 'text/csv' });
-        const url= window.URL.createObjectURL(blob);
-        window.open(url);
+    function downloadFile(text: string) {
+        const blob = new Blob([text], { type: 'text/json' });
+        return window.URL.createObjectURL(blob);
     }
-    
+
+    const copyToClipboard = (str: string) => {
+        const el = document.createElement("textarea");
+        el.value = str;
+        el.setAttribute("readonly", "");
+        el.style.position = "absolute";
+        el.style.left = "-9999px";
+        document.body.appendChild(el);
+        const selected =
+            document.getSelection().rangeCount > 0
+                ? document.getSelection().getRangeAt(0)
+                : false;
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+        if (selected) {
+            document.getSelection().removeAllRanges();
+            document.getSelection().addRange(selected);
+        }
+        toast({
+            description: "Content copied",
+        });
+    };
+
     function allKeys() {
         return uniqueKeys.reduce((acc, item, index) => {
             acc[item] = ``;
@@ -66,7 +86,6 @@ const FilePreviewModal: FC<FilePreviewModalProps> = ({filesContent, uniqueKeys})
     }
 
     const copyVal = filesContent.map(z => ({...z, content: unflattenObject({...allKeys(), ...z.content})})).map(z => ({...z, content: convertNumericKeysToArray(z.content)}));
-    console.log(copyVal);
     return (
         <>
         <Tabs defaultValue="account" className=" w-[100%]">
@@ -81,6 +100,16 @@ const FilePreviewModal: FC<FilePreviewModalProps> = ({filesContent, uniqueKeys})
                 copyVal.map(({name, content}: FileContentSerialized) =>
                     <TabsContent key={name} value={name}>
                         <pre>{JSON.stringify(content, null, 2)}</pre>
+                        <div className="sticky right-0 bottom-[1.5rem] w-full flex flex-col items-end gap-4">
+                            <Button variant={'default'}>
+                                <a className={'float-right'} download={`${name}.json`}
+                                   href={downloadFile(JSON.stringify(content, null, 2))}>Download</a>
+                            </Button>
+
+                            <Button variant={'secondary'} onClick={_ => copyToClipboard(JSON.stringify(content, null, 2))}>Copy content</Button>
+                        </div>
+
+
                     </TabsContent>
                 )
             }
