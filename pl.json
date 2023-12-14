@@ -1,5 +1,10 @@
 {
   "common": {
+    "test": [
+      "val1",
+      "val2",
+      "val3"
+    ],
     "greetings": {
       "hello": "Hello",
       "goodMorning": "Good morning",
