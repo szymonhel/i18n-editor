@@ -47,6 +47,15 @@ const KeyForm = ({currentKey, fileContentCollection, alreadyCreatedKeys, fileNam
             definitions: values.definitions as Record<string, string>
         });
     }
+
+    async function getGptSuggestions() {
+        var result = await fetch('/api/chat-gpt', {
+            method: 'POST',
+            body: JSON.stringify(
+                form.getValues())});
+        console.log(await result.json());
+    }
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(submit)} className="space-y-8">
@@ -68,7 +77,11 @@ const KeyForm = ({currentKey, fileContentCollection, alreadyCreatedKeys, fileNam
                             )}
                         />
                     )}
-                <Button type="submit">Submit</Button>
+                <div className={'flex justify-between'}>
+                    <Button variant={'secondary'} type="button" onClick={getGptSuggestions}>Get Suggestions</Button>
+                    <Button type="submit">Submit</Button>
+                </div>
+
             </form>
         </Form>
     );

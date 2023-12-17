@@ -34,15 +34,6 @@ const Page = () => {
     }
 
     useEffect(() => {
-        if (filesContent.length > 0) {
-            console.log('FILES CONTENT', JSON.stringify(filesContent));
-            console.log(sessionStorage.getItem(FILES_SESSION_KEY));
-            // sessionStorage.setItem(FILES_SESSION_KEY, JSON.stringify(filesContent));
-        }
-
-    }, [filesContent]);
-
-    useEffect(() => {
         const value = sessionStorage.getItem(FILES_SESSION_KEY);
 
         if (!value) {
