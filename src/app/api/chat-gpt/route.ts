@@ -10,6 +10,9 @@ export async function POST(
 ) {
     const  data = await req.json();
 
+    if (Object.values(data.definitions).every(key => !key)){
+        return NextResponse.json({msg: 'At least one key needs to be translated'}, {status: 400});
+    }
     const openai = new OpenAI({
         apiKey: data.apiKey,
 

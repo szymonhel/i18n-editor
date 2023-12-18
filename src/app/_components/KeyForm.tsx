@@ -61,7 +61,7 @@ const [suggestions, setSuggestions] = useState<Record<string, string>>();
                 })
             });
             setSuggestions(JSON.parse(await result.json()));
-        } catch {
+        } catch (ex) {
             toast({
                 variant: "destructive",
                 description: "Failed to get text suggestions",
