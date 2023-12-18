@@ -20,7 +20,7 @@ const Page = () => {
     const [uniqueKeys, setUniqueKeys] = React.useState<string[]>([]);
     const router = useRouter();
     const [filterKey, setFilterKey] = useState('');
-    const [gptKey, setGptKey] = useState('');
+    const [gptKey, setGptKey] = useState(localStorage.getItem('GPT_KEY'));
     function flattenObject(obj: any, prefix = '') {
         return Object.keys(obj).reduce((acc, key) => {
             const newKey = prefix ? `${prefix}.${key}` : key;
@@ -69,6 +69,11 @@ const Page = () => {
         setUniqueKeys(uniqueKeys.filter(z => z !== key));
     }
 
+    function onGptSet(key: string) {
+        setGptKey(key);
+        localStorage.setItem('GPT_KEY', key);
+    }
+
     return (
         <>
             <div className={'flex justify-between items-center'}>
@@ -80,7 +85,7 @@ const Page = () => {
                 </div>
 
                 <div className={'flex gap-3'}>
-                    <ChatSyncModal gptKey={gptKey} onKeySet={setGptKey}/>
+                    <ChatSyncModal gptKey={gptKey} onKeySet={key => onGptSet(key)}/>
                     <CustomDialog fullScreen={true} trigger={<Button variant={'success'} className={'bg-green-500 hover:bg-green-700'}><File className={'mr-2'}/> File preview</Button>}
                                   title={'Preview'} content={<FilePreviewModal filesContent={filesContent} uniqueKeys={uniqueKeys}/>}/>
 

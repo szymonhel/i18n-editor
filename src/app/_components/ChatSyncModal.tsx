@@ -23,7 +23,7 @@ const ChatSyncModal = ({gptKey, onKeySet}: ChatSyncModalProps) => {
                       title={'Connect to GPT'}
                       content={
                           <>
-                              <label for={'gptKey'}>API Key</label>
+                              <label htmlFor={'gptKey'}>API Key</label>
                               <Input id={'gptKey'} value={keyFormValue}
                                      onChange={e => setKeyFormValue(e.target.value)}/>
                           </>

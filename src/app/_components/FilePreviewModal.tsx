@@ -3,6 +3,7 @@ import {FileContentSerialized} from '@/types/uploaded-file';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
 import {Button} from "@/components/ui/button";
 import {useToast} from "@/components/ui/use-toast";
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 export type FilePreviewModalProps = {
     filesContent: any[];
@@ -55,24 +56,6 @@ const FilePreviewModal: FC<FilePreviewModalProps> = ({filesContent, uniqueKeys})
         return window.URL.createObjectURL(blob);
     }
 
-    const copyToClipboard = (str: string) => {
-        const el = document.createElement("textarea");
-        el.value = str;
-        el.setAttribute("readonly", "");
-        el.style.position = "absolute";
-        el.style.left = "-9999px";
-        document.body.appendChild(el);
-        el.focus();
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
-        toast({
-            description: "Content copied",
-        });
-    };
-
-
-
     function allKeys() {
         return uniqueKeys.reduce((acc, item, index) => {
             acc[item] = ``;
@@ -101,7 +84,13 @@ const FilePreviewModal: FC<FilePreviewModalProps> = ({filesContent, uniqueKeys})
                                    href={downloadFile(JSON.stringify(content, null, 2))}>Download</a>
                             </Button>
 
-                            <Button variant={'secondary'} onClick={_ => copyToClipboard(JSON.stringify(content, null, 2))}>Copy content</Button>
+                            <CopyToClipboard text={JSON.stringify(content, null, 2)} onCopy={() => toast({
+                                description: "Content copied",
+                            })}>
+                                <Button variant={'secondary'}>Copy content</Button>
+                            </CopyToClipboard>
+
+
                         </div>
 
 
