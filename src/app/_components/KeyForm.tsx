@@ -50,6 +50,7 @@ const [suggestions, setSuggestions] = useState<Record<string, string>>();
         });
     }
 
+    console.log(suggestions);
     async function getGptSuggestions() {
         try {
             var result = await fetch('/api/chat-gpt', {
@@ -92,7 +93,7 @@ const [suggestions, setSuggestions] = useState<Record<string, string>>();
                             </FormItem>
                         )}
                     />
-                        {suggestions && <span className={'flex gap-3 items-center'}><Button variant={'outline'} onClick={_ => form.setValue(`definitions.${fileName}`, suggestions[fileName])}>Apply</Button> {suggestions[fileName]}</span>}
+                        {suggestions && suggestions[fileName] && <span className={'flex gap-3 items-center'}><Button variant={'outline'} type={'button'} onClick={_ => form.setValue(`definitions.${fileName}`, suggestions[fileName])}>Apply</Button> {suggestions[fileName]}</span>}
                     </>
                 )}
                 <div className={'flex justify-between'}>
