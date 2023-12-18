@@ -1,12 +1,14 @@
-import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
+import {Button} from '@/components/ui/button';
+import {Form, FormControl   , FormField, FormItem, FormLabel, FormMessage} from '@/components/ui/form';
+import {zodResolver} from '@hookform/resolvers/zod';
+import React, {useState} from 'react';
 import {useForm} from 'react-hook-form';
-import { z } from 'zod';
+import {z} from 'zod';
 import {Textarea} from '@/components/ui/textarea';
 import TextInput from '@/components/ui/custom/TextInput';
 import {FileContentSerialized} from '@/types/uploaded-file';
+import { Info } from 'lucide-react';
+import {toast} from "@/components/ui/use-toast";
 
 export type CreatedKey = {
     key: string;
@@ -17,7 +19,7 @@ export type KeyFormProps = {
     fileContentCollection?: FileContentSerialized[];
     fileNames: string[];
     alreadyCreatedKeys: string[];
-    onSubmit: ( model: CreatedKey) => void;
+    onSubmit: (model: CreatedKey) => void;
 }
 
 const KeyForm = ({currentKey, fileContentCollection, alreadyCreatedKeys, fileNames, onSubmit}: KeyFormProps) => {
@@ -28,7 +30,7 @@ const KeyForm = ({currentKey, fileContentCollection, alreadyCreatedKeys, fileNam
         definitions: z.record(z.string().optional())
     });
 
-
+const [suggestions, setSuggestions] = useState<Record<string, string>>();
     const form
         = useForm<z.infer<typeof keyFormSchema>>({
         resolver: zodResolver(keyFormSchema),
@@ -49,11 +51,24 @@ const KeyForm = ({currentKey, fileContentCollection, alreadyCreatedKeys, fileNam
     }
 
     async function getGptSuggestions() {
-        var result = await fetch('/api/chat-gpt', {
-            method: 'POST',
-            body: JSON.stringify(
-                form.getValues())});
-        console.log(await result.json());
+        try {
+            var result = await fetch('/api/chat-gpt', {
+                method: 'POST',
+                body: JSON.stringify({
+                    apiKey: '',
+                    languages: fileContentCollection?.map(z => z.name),
+                    definitions: form.getValues().definitions
+                })
+            });
+            setSuggestions(JSON.parse(await result.json()));
+        } catch {
+            toast({
+                variant: "destructive",
+                description: "Failed to get text suggestions",
+
+            });
+        }
+
     }
 
     return (
@@ -62,21 +77,24 @@ const KeyForm = ({currentKey, fileContentCollection, alreadyCreatedKeys, fileNam
                 <TextInput key={'key'} control={form.control} name={'key'} placeholder={'Key'} label={'Key'}/>
 
                 {fileNames.map((fileName: any, index: number) =>
-                        <FormField
-                            key={fileName + index}
-                            control={form.control}
-                            name={`definitions.${fileName}`}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>{fileName}</FormLabel>
-                                    <FormControl>
-                                        <Textarea {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    )}
+                    <>
+                    <FormField
+                        key={fileName + index}
+                        control={form.control}
+                        name={`definitions.${fileName}`}
+                        render={({field}) => (
+                            <FormItem>
+                                <FormLabel>{fileName}</FormLabel>
+                                <FormControl>
+                                    <Textarea {...field} />
+                                </FormControl>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
+                        {suggestions && <span className={'flex gap-3 items-center'}><Button variant={'outline'} onClick={_ => form.setValue(`definitions.${fileName}`, suggestions[fileName])}>Apply</Button> {suggestions[fileName]}</span>}
+                    </>
+                )}
                 <div className={'flex justify-between'}>
                     <Button variant={'secondary'} type="button" onClick={getGptSuggestions}>Get Suggestions</Button>
                     <Button type="submit">Submit</Button>
