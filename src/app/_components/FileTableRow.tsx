@@ -12,7 +12,7 @@ export type TableRowProps = {
     editKey: (key: CreatedKey) => void;
     removeKey: (key: string) => void;
     uniqueKeys: string[];
-    gptKey?: string;
+    gptKey?: string | null;
     contents: Array<string | Record<string, string>>;
 
 }

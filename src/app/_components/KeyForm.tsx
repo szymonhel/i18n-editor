@@ -18,7 +18,7 @@ export type KeyFormProps = {
     currentKey?: string;
     fileContentCollection?: FileContentSerialized[];
     fileNames: string[];
-    gptKey?: string;
+    gptKey?: string | null;
     alreadyCreatedKeys: string[];
     onSubmit: (model: CreatedKey) => void;
 }

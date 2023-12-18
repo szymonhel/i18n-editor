@@ -7,11 +7,11 @@ import {Check, File, PlugZap} from 'lucide-react';
 import {Input} from '@/components/ui/input';
 
 export type ChatSyncModalProps = {
-    gptKey: string;
+    gptKey: string | null;
     onKeySet: (key: string) => void;
 }
 const ChatSyncModal = ({gptKey, onKeySet}: ChatSyncModalProps) => {
-    const [keyFormValue, setKeyFormValue] = useState(gptKey)
+    const [keyFormValue, setKeyFormValue] = useState(gptKey ?? '')
 
     return (
         <CustomDialog fullScreen={false}

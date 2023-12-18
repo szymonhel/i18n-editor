@@ -20,7 +20,7 @@ const Page = () => {
     const [uniqueKeys, setUniqueKeys] = React.useState<string[]>([]);
     const router = useRouter();
     const [filterKey, setFilterKey] = useState('');
-    const [gptKey, setGptKey] = useState(localStorage.getItem('GPT_KEY'));
+    const [gptKey, setGptKey] = useState('');
     function flattenObject(obj: any, prefix = '') {
         return Object.keys(obj).reduce((acc, key) => {
             const newKey = prefix ? `${prefix}.${key}` : key;
@@ -37,6 +37,10 @@ const Page = () => {
 
     useEffect(() => {
         const value = sessionStorage.getItem(FILES_SESSION_KEY);
+
+        if (typeof localStorage !== 'undefined') {
+            setGptKey(localStorage.getItem('GPT_KEY') ?? '');
+        }
 
         if (!value) {
             router.back();
@@ -71,7 +75,9 @@ const Page = () => {
 
     function onGptSet(key: string) {
         setGptKey(key);
-        localStorage.setItem('GPT_KEY', key);
+        if (typeof localStorage !== 'undefined') {
+            localStorage.setItem('GPT_KEY', key);
+        }
     }
 
     return (

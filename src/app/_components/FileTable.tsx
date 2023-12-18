@@ -10,7 +10,7 @@ export type FileTableProps = {
     fileContentCollection: FileContentSerialized[];
     uniqueKeys: string[];
     filterKey?: string;
-    gptKey?: string;
+    gptKey?: string | null;
     editKey: (model: CreatedKey) => void;
     removeKey: (key: string) => void;
 }
