@@ -12,6 +12,7 @@ export type TableRowProps = {
     editKey: (key: CreatedKey) => void;
     removeKey: (key: string) => void;
     uniqueKeys: string[];
+    gptKey?: string;
     contents: Array<string | Record<string, string>>;
 
 }
@@ -22,7 +23,8 @@ const FileTableRow: FC<TableRowProps> = ({
                                              editKey,
                                              removeKey,
                                              uniqueKeys,
-                                             contents
+                                             contents,
+                                             gptKey
                                          }: TableRowProps) => {
     return (
         <TableRow>
@@ -39,6 +41,7 @@ const FileTableRow: FC<TableRowProps> = ({
                             className="h-4 w-4"/></Button>
                     }
                                   content={<KeyForm currentKey={currentKey}
+                                                    gptKey={gptKey}
                                                     fileContentCollection={fileContentCollection}
                                                     fileNames={fileContentCollection.map(z => z.name)}
                                                     alreadyCreatedKeys={uniqueKeys}

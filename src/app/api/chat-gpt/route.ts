@@ -15,13 +15,12 @@ export async function POST(
     }
     const openai = new OpenAI({
         apiKey: data.apiKey,
-
     });
 
     const completion = await openai.chat.completions.create({
         messages: [
 
-            { role: "system", content: "You are a helpful assistant. User needs help with the translations. He will provide object with where keys are the language type, and value is the translation. Fill up the missing translations basing on the current one or key" },
+            { role: "system", content: "You are a helpful assistant. User needs help with the translations. He will provide object with where keys are the language type, and value is the translation. Fill up the missing translations basing on the one provided by the user. Return values in json format" },
             {role: 'system', content: `Translate me to this languages: ${data.languages}`},
             {role: 'system', content: `Result should be just a json`},
             {
@@ -30,7 +29,7 @@ export async function POST(
         }],
         model: "gpt-3.5-turbo",
         max_tokens: 150,
-        temperature: 0.9,
+        temperature: 0.9
 
     });
 

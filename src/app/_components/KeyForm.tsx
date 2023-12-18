@@ -18,11 +18,12 @@ export type KeyFormProps = {
     currentKey?: string;
     fileContentCollection?: FileContentSerialized[];
     fileNames: string[];
+    gptKey?: string;
     alreadyCreatedKeys: string[];
     onSubmit: (model: CreatedKey) => void;
 }
 
-const KeyForm = ({currentKey, fileContentCollection, alreadyCreatedKeys, fileNames, onSubmit}: KeyFormProps) => {
+const KeyForm = ({currentKey, fileContentCollection, alreadyCreatedKeys, fileNames, onSubmit, gptKey}: KeyFormProps) => {
     const keyFormSchema = z.object({
         key: z.string().min(1).refine((value) => !alreadyCreatedKeys.filter(z => z !== currentKey).map(z => z.toLowerCase()).includes(value.toLowerCase()), {
             message: 'Key already exists'
@@ -50,13 +51,12 @@ const [suggestions, setSuggestions] = useState<Record<string, string>>();
         });
     }
 
-    console.log(suggestions);
     async function getGptSuggestions() {
         try {
             var result = await fetch('/api/chat-gpt', {
                 method: 'POST',
                 body: JSON.stringify({
-                    apiKey: '',
+                    apiKey: gptKey,
                     languages: fileContentCollection?.map(z => z.name),
                     definitions: form.getValues().definitions
                 })
@@ -96,9 +96,9 @@ const [suggestions, setSuggestions] = useState<Record<string, string>>();
                         {suggestions && suggestions[fileName] && <span className={'flex gap-3 items-center'}><Button variant={'outline'} type={'button'} onClick={_ => form.setValue(`definitions.${fileName}`, suggestions[fileName])}>Apply</Button> {suggestions[fileName]}</span>}
                     </>
                 )}
-                <div className={'flex justify-between'}>
-                    <Button variant={'secondary'} type="button" onClick={getGptSuggestions}>Get Suggestions</Button>
+                <div className={'flex justify-between flex-row-reverse'}>
                     <Button type="submit">Submit</Button>
+                    {!!gptKey && <Button variant={'secondary'} type="button" onClick={getGptSuggestions}>Get Suggestions</Button>}
                 </div>
 
             </form>

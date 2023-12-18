@@ -13,12 +13,14 @@ import {FILES_SESSION_KEY} from '@/consts';
 import { File } from 'lucide-react';
 import FilePreviewModal from '@/app/_components/FilePreviewModal';
 import {Input} from "@/components/ui/input";
+import ChatSyncModal from '@/app/_components/ChatSyncModal';
 
 const Page = () => {
     const [filesContent, setFilesContent] = React.useState<FileContentSerialized[]>([]);
     const [uniqueKeys, setUniqueKeys] = React.useState<string[]>([]);
     const router = useRouter();
     const [filterKey, setFilterKey] = useState('');
+    const [gptKey, setGptKey] = useState('');
     function flattenObject(obj: any, prefix = '') {
         return Object.keys(obj).reduce((acc, key) => {
             const newKey = prefix ? `${prefix}.${key}` : key;
@@ -78,19 +80,20 @@ const Page = () => {
                 </div>
 
                 <div className={'flex gap-3'}>
+                    <ChatSyncModal gptKey={gptKey} onKeySet={setGptKey}/>
                     <CustomDialog fullScreen={true} trigger={<Button variant={'success'} className={'bg-green-500 hover:bg-green-700'}><File className={'mr-2'}/> File preview</Button>}
                                   title={'Preview'} content={<FilePreviewModal filesContent={filesContent} uniqueKeys={uniqueKeys}/>}/>
 
                     <CustomDialog fullScreen={true} title={'New Key'} trigger={
                         <Button variant={'default'}>Add new key</Button>
                     }
-                                  content={<KeyForm fileNames={fileNames} alreadyCreatedKeys={uniqueKeys}
+                                  content={<KeyForm gptKey={gptKey} fileNames={fileNames} alreadyCreatedKeys={uniqueKeys}
                                                     onSubmit={addNewKey}/>}/>
                 </div>
             </div>
 
             <Input placeholder={'Filter by'} onChange={e => setFilterKey(e.target.value)} className={'w-[30%] mb-3'}/>
-            <FileTable fileContentCollection={filesContent} filterKey={filterKey} editKey={addNewKey} uniqueKeys={uniqueKeys}
+            <FileTable gptKey={gptKey} fileContentCollection={filesContent} filterKey={filterKey} editKey={addNewKey} uniqueKeys={uniqueKeys}
                        removeKey={onRemoveKey}/>
         </>
 
